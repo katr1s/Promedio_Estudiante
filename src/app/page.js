@@ -1,95 +1,86 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+
+import { useState } from "react";
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.js</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [resultado, setResultado] = useState(0);
+  const [r1, setR1] = useState("");
+  const [r2, setR2] = useState("");
+  const [r3, setR3] = useState("");
+  const [mensaje, setMensaje] = useState("");
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+  function calcularPromedio() {
+    if (r1 === "" || r2 === "" || r3 === "") {
+      setResultado("Completa las 3 calificaciones.");
+      return;
+    }
+
+    const promedio = r1 * 0.3 + r2 * 0.3 + r3 * 0.4;
+    setResultado(`${promedio.toFixed(1)}`);
+  }
+
+  function manejarCambio(valor, setNota) {
+    let num = parseFloat(valor);
+
+    if (isNaN(num)) {
+      num = "";
+    } else if (num > 5) {
+      num = 5;
+      setMensaje("El valor fue ajustado a 5 (máximo permitido).");
+    } else if (num < 0) {
+      num = 0;
+      setMensaje("El valor fue ajustado a 0 (mínimo permitido).");
+    } else {
+      setMensaje("");
+    }
+
+    setNota(num);
+  }
+
+  return (
+    <>
+      <div className="hero">
+        <div className="calificaciones">
+          <h1>Promedio estudiante</h1>
+          <header>
+            <div className="calificacion">
+              <label htmlFor="R1">Calificación 1 (30%)</label>
+              <input
+                type="number"
+                id="R1"
+                value={r1}
+                onChange={(e) => manejarCambio(e.target.value, setR1)}
+              />
+            </div>
+            <div className="calificacion">
+              <label htmlFor="R2">Calificación 2 (30%)</label>
+              <input
+                type="number"
+                id="R2"
+                value={r2}
+                onChange={(e) => manejarCambio(e.target.value, setR2)}
+              />
+            </div>
+            <div className="calificacion">
+              <label htmlFor="R3">Calificación 3 (40%)</label>
+              <input
+                type="number"
+                id="R3"
+                value={r3}
+                onChange={(e) => manejarCambio(e.target.value, setR3)}
+              />
+            </div>
+          </header>
+
+          <h3>{mensaje}</h3>
+
+          <button onClick={calcularPromedio}>Calcular promedio</button>
         </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+        <div className="resultado">
+          <h2>El promedio del estudiante</h2>
+          <h2>{resultado}</h2>
+        </div>
+      </div>
+    </>
   );
 }
